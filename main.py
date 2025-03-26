@@ -1,6 +1,8 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from datetime import datetime
+import pandas
+import collections
 
 
 def get_year_word():
@@ -21,18 +23,40 @@ def calculating_age_company():
     return difference
 
 
-env = Environment(
-    loader=FileSystemLoader('.'),
-    autoescape=select_autoescape(['html'])
-)
-template = env.get_template('template.html')
+def main():
+    excel_data_wine2 = pandas.read_excel('wine3.xlsx').fillna('')
 
-rendered_page = template.render(
-    text_age=f'Уже {get_year_word()} с вами'
-)
+    wines_dict = collections.defaultdict(list)
 
-with open('index.html', 'w', encoding="utf8") as file:
-    file.write(rendered_page)
+    for _, row in excel_data_wine2.iterrows():
+        category = row['Категория']
+        wine_data = {
+            'Картинка': row['Картинка'],
+            'Категория': row['Категория'],
+            'Название': row['Название'],
+            'Сорт': row['Сорт'],
+            'Цена': row['Цена'],
+            'Акция': row['Акция']
+        }
+        wines_dict[category].append(wine_data)
 
-server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
+    env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=select_autoescape(['html'])
+    )
+    template = env.get_template('template.html')
+
+    rendered_page = template.render(
+        age_text=f'Уже {get_year_word()} с вами',
+        wines_dict=wines_dict
+    )
+
+    with open('index.html', 'w', encoding="utf8") as file:
+        file.write(rendered_page)
+
+    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+
+if __name__ == '__main__':
+    main()
