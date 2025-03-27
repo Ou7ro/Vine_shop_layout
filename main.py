@@ -24,7 +24,7 @@ def calculating_age_company():
 
 
 def main():
-    excel_data_wine2 = pandas.read_excel('wine3.xlsx').fillna('')
+    excel_data_wine2 = pandas.read_excel('table_of_property_wine.xlsx').fillna('')
 
     wines_dict = collections.defaultdict(list)
 
