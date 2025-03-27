@@ -1,6 +1,6 @@
-env/
 .vscode/
 venv3132/
 venv/
 .replit
+.env
 

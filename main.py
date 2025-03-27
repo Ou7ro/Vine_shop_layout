@@ -1,8 +1,10 @@
+from environs import Env
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from datetime import datetime
 import pandas
 import collections
+import argparse
 
 
 def get_year_word():
@@ -24,7 +26,15 @@ def calculating_age_company():
 
 
 def main():
-    excel_data_wine2 = pandas.read_excel('table_of_property_wine.xlsx').fillna('')
+    env = Env()
+    env.read_env()
+    excel_path = env.str('EXCEL_PATH', default='table_of_property_wine.xlsx')
+
+    parser = argparse.ArgumentParser(description='Введите путь до файла, либо же название файла, если он уже находится в директории скрипта')
+    parser.add_argument('--path', default=excel_path, help='Путь')
+    args = parser.parse_args()
+
+    excel_data_wine2 = pandas.read_excel(args.path).fillna('')
 
     wines_dict = collections.defaultdict(list)
 
