@@ -19,8 +19,8 @@ def get_year_word(company_age):
 
 
 def calculate_age_company():
-    get_startet = 1920
-    company_age = datetime.now().year - get_startet
+    foundetion_year = 1920
+    company_age = datetime.now().year - foundetion_year
     return company_age
 
 
@@ -60,7 +60,7 @@ def main():
 
     rendered_page = template.render(
         age_text=f'Уже {get_year_word(company_age)} с вами',
-        wines_dict=wines_by_category
+        wine_catalog=wines_by_category
     )
 
     with open('index.html', 'w', encoding="utf8") as file:
