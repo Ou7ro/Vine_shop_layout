@@ -29,10 +29,11 @@ def main():
     env.read_env()
     excel_path = env.str('EXCEL_PATH', default='table_of_property_wine.xlsx')
 
-    parser = argparse.ArgumentParser(description='Введите путь до файла, либо же название файла, если он уже находится в директории скрипта')
+    parser = argparse.ArgumentParser(description='''Введите путь до файла, либо же название файла, 
+                                     если он уже находится в директории скрипта.''')
     parser.add_argument('--path', default=excel_path, help='Путь')
     args = parser.parse_args()
-    
+
     wine_table = pandas.read_excel(args.path).fillna('')
 
     wines_by_category = collections.defaultdict(list)
@@ -54,9 +55,9 @@ def main():
         autoescape=select_autoescape(['html'])
     )
     template = env.get_template('template.html')
-    
+
     company_age = calculate_age_company()
-    
+
     rendered_page = template.render(
         age_text=f'Уже {get_year_word(company_age)} с вами',
         wines_dict=wines_by_category
